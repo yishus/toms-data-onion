@@ -2,17 +2,17 @@ import base64
 
 
 def start():
-    txt = open("./payload.txt", "r")
+    txt = open("./data/payload.txt", "r")
     txt_string = txt.read()
     txt_decode = base64.a85decode(txt_string, adobe=True)
 
-    one = open("./1.txt", "w")
+    one = open("./decrypted/1.txt", "w")
     one.write(txt_decode.decode("UTF-8"))
     one.close()
 
 
 def one():
-    txt = open("./payload_1.txt", "r")
+    txt = open("./decrypted/payload_1.txt", "r")
     txt_string = txt.read()
     txt_decode = base64.a85decode(txt_string, adobe=True)
 
@@ -28,13 +28,13 @@ def one():
         bit = b & 1
         decoded[i] = bit << 7 | b >> 1
 
-    two = open("./2.txt", "w")
+    two = open("./decrypted/2.txt", "w")
     two.write(bytes(decoded).decode("utf8"))
     two.close()
 
 
 def two():
-    txt = open("./payload_2.txt", "r")
+    txt = open("./decrypted/payload_2.txt", "r")
     txt_string = txt.read()
     txt_decode = base64.a85decode(txt_string, adobe=True)
 
@@ -53,9 +53,15 @@ def two():
     for b in range(int(len(good_bits) / 8)):
         byte = "".join(good_bits[b * 8 : (b + 1) * 8])
         decoded.append(chr(int(byte, 2)))
-    three = open("./3.txt", "w")
+    three = open("./decrypted/3.txt", "w")
     three.write("".join(decoded))
     three.close()
 
 
-two()
+def three():
+    txt = open("./decrypted/payload_3.txt", "r")
+    txt_string = txt.read()
+    txt_decode = base64.a85decode(txt_string, adobe=True)
+
+
+three()
