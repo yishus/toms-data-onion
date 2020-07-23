@@ -1,1 +1,7 @@
 decrypted
+
+bin
+lib
+pyvenv.cfg
+
+*.pyc

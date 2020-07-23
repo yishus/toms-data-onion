@@ -1,5 +1,8 @@
 import base64
 import ipaddress
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.backends import default_backend
+from key_wrap import key_unwrap
 
 
 def start():
@@ -153,6 +156,28 @@ def four():
     five.close()
 
 
+def five():
+    txt = open("./decrypted/payload_5.txt", "r")
+    txt_string = txt.read()
+    txt_decode = base64.a85decode(txt_string, adobe=True)
+
+    kek = txt_decode[0:32]
+    iv = txt_decode[32:40]
+    wrapped_key = txt_decode[40:80]
+    iv_payload = txt_decode[80:96]
+    payload = txt_decode[96:]
+
+    key = key_unwrap(kek, wrapped_key, iv)
+
+    backend = default_backend()
+    cipher = Cipher(algorithms.AES(b''.join(key)), modes.CBC(iv_payload), backend=backend)
+    decryptor = cipher.decryptor()
+    decoded = decryptor.update(payload) + decryptor.finalize()
+
+    six = open("./decrypted/6.txt", "w")
+    six.write(bytes(decoded).decode("utf8"))
+    six.close()
+
 def ipv4_header(bytes):
     size = bytes[2] << 8 | bytes[3]
     source_ip = str(
@@ -219,4 +244,4 @@ def udp_header(bytes, ipv4_header_bytes, data):
     return (dest_port, sum == 0xFFFF)
 
 
-four()
+five()
